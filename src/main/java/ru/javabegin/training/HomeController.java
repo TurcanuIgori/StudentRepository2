@@ -86,7 +86,9 @@ public class HomeController {
 			if(file.getBytes().length != 0){									
 				student.setImage(file.getBytes());
 			}else{				
-				InputStream is = new FileInputStream(new File("C:\\Users\\admin\\Desktop\\SpringMVC_4\\src\\main\\webapp\\resources\\img\\noImg.png"));
+				ClassLoader classLoader = getClass().getClassLoader();
+
+				InputStream is = new FileInputStream(new File("C:\\Users\\admin\\Desktop\\secondProject\\src\\main\\webapp\\resources\\img\\noImg.png"));
 				student.setImage(IOUtils.toByteArray(is));		        	
 			}
 		}			
@@ -150,7 +152,7 @@ public class HomeController {
 		response.setContentType("image/jpg");
 		try {
 			if(id == 0){
-				InputStream is = new FileInputStream(new File("C:\\Users\\admin\\Desktop\\SpringMVC_4\\src\\main\\webapp\\resources\\img\\noImg.png"));				
+				InputStream is = new FileInputStream(new File("C:\\Users\\admin\\Desktop\\secondProject\\src\\main\\webapp\\resources\\img\\noImg.png"));				
 				response.getOutputStream().write(IOUtils.toByteArray(is));
 			}else{
 				response.getOutputStream().write(service.getStudentDetailsById(id).getImage());
