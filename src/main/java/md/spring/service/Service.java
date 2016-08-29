@@ -18,7 +18,6 @@ import md.spring.model.Discipline;
 import md.spring.model.Group;
 import md.spring.model.LibraryAbonament;
 import md.spring.model.Mark;
-import md.spring.model.Person;
 import md.spring.model.PhoneType;
 import md.spring.model.SearchData;
 import md.spring.model.Student;
@@ -102,15 +101,21 @@ public class Service {
 	public Discipline getDisciplineById(int id) {
 		return disciplineDao.getDisciplineById(id);
 	}
+	
+	//add mark
 	@Transactional
 	public void saveMark(Mark mark) {
 		 markDao.saveMark(mark);
 		
 	}
+	
+	//get all discipline from database
 	@Transactional
 	public List<Discipline> getAllDiscipline() {		
 		return disciplineDao.getAllDiscipline();
 	}
+	
+	//get all students by criteria
 	@Transactional
 	public List<Student> getAllStudentsByCriterias(SearchData searchData) {
 		 return new ArrayList<Student>(new HashSet<Student>(studentDaoImplements.getAllStudentsByCriterias(searchData)));

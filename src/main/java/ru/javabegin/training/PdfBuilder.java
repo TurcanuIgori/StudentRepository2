@@ -31,15 +31,18 @@ public class PdfBuilder extends AbstractTextPdfView {
 	protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 	
+		// get students list from request
 		List<Student> listStudents = (List<Student>) model.get("students");
 		
+		// define font for first paragraph		
 		Font fontTitle = FontFactory.getFont(FontFactory.COURIER_OBLIQUE);
         fontTitle.setColor(BaseColor.BLACK);
         fontTitle.setSize(20);
         fontTitle.setStyle(Font.BOLD);
 
         document.add(new Paragraph("Student list \n \n", fontTitle));
-		
+        
+		// create table of 8 columns and select width for all columns
         PdfPTable table = new PdfPTable(8);
 		table.setWidthPercentage(100.0f);
 		table.setWidths(new float[] {2.0f, 1.5f, 1.9f, 1.4f, 2.0f,  2.0f, 2.4f, 2.5f});
@@ -50,6 +53,7 @@ public class PdfBuilder extends AbstractTextPdfView {
 		font.setColor(BaseColor.BLACK);
 	    font.setSize(12); 
 	    
+	    // define font for other cells	    
 	    Font fontCell = FontFactory.getFont(FontFactory.TIMES_ROMAN);
         fontCell.setSize(10);
 		
@@ -88,12 +92,15 @@ public class PdfBuilder extends AbstractTextPdfView {
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
+		// parsing all students from list
 		for(Student student : listStudents){
 			table.addCell(Image.getInstance(student.getImage()));
 			table.addCell(new Phrase(student.getFirstName()+" "+student.getLastName(), fontCell));
 			table.addCell(new Phrase(student.getGender().toString(), fontCell));
 			table.addCell(new Phrase((dateFormat).format(student.getDob()), fontCell));
 			String abonament = STATUS.NONE.toString();
+			
+			// if student have status active print begin date and end date else only status
 			if(student.getAbonament() != null) {
 	               abonament = student.getAbonament().getStatus().toString();
 	               if(student.getAbonament().getStatus().equals(STATUS.ACTIVE)){
@@ -104,6 +111,8 @@ public class PdfBuilder extends AbstractTextPdfView {
 			table.addCell(new Phrase(abonament,fontCell));
 			table.addCell(new Phrase(student.getAddress().getCountry() + " " + "or. " + student.getAddress().getCity() + " " + "str. " + student.getAddress().getStreet(), fontCell));
 			String phones = null;
+			
+			// parsing all phones of student
 	        for(Phone phone: student.getListPhones()){
 	        	if(phones == null){
 	        		phones = phone.getPhoneType().getType() + ": " + phone.getPhone() + "\n";
@@ -113,6 +122,8 @@ public class PdfBuilder extends AbstractTextPdfView {
 	        }
 	        table.addCell(new Phrase(phones, fontCell));            
             String marks = "This student does not have marks";
+            
+            // print all marks of student
             if(student.getAverageList() != null) {
                 for (DisciplineAverage average : student.getAverageList()) {
                 	if(marks.equals("This student does not have marks")){

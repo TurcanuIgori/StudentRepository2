@@ -31,6 +31,7 @@ import md.spring.model.SearchData;
 import md.spring.model.Student;
 import md.spring.service.Service;
 
+//primary controller
 @Controller
 public class HomeController {
 	
@@ -40,6 +41,8 @@ public class HomeController {
 	public void setService(Service service) {		
 		this.service = service;
 	}
+	
+	//data for home page and return to home.jsp page
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		model.addAttribute("searchData", new SearchData());
@@ -48,6 +51,8 @@ public class HomeController {
 		model.addAttribute("students", service.getAllStudents());		
 		return "home";
 	}
+	
+	//get students by criterias and return to home.jsp page
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public String search(@ModelAttribute("searchData")SearchData searchData, Locale locale, Model model) {
 		System.out.println(searchData.getName() + searchData.getDiscipline() + searchData.getGender());
@@ -57,6 +62,9 @@ public class HomeController {
 		model.addAttribute("students", service.getAllStudentsByCriterias(searchData));		
 		return "home";
 	}
+	
+	//request to student and go to edit page
+	//if id equals with 0 return new student else return student by id
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public String homePost(@RequestParam(value="id", required=false) int id, Model model) {
 		if(id != 0){			
@@ -68,6 +76,9 @@ public class HomeController {
 		model.addAttribute("phonetype", service.getAllPhoneTypes());		
 		return "edit";
 	}
+	
+	//request to save or update student and redirect to home page
+	//check student if it has errors
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public String addUpdate(@Valid Student student, BindingResult bindingResult, Model model, @RequestParam(value="img", required=true) MultipartFile file) throws IOException{
 		if(bindingResult.hasErrors()){
@@ -80,14 +91,14 @@ public class HomeController {
 			if(file.getBytes().length != 0){									
 				student.setImage(file.getBytes());
 			}else{				
+				//if user want to update information and did not select an image set image from database with his id
 				student.setImage(service.getStudentDetailsById(student.getId()).getImage());
 			}
 		}else{			
 			if(file.getBytes().length != 0){									
 				student.setImage(file.getBytes());
-			}else{				
-				ClassLoader classLoader = getClass().getClassLoader();
-
+			}else{
+				//if user no selected image, set default image
 				InputStream is = new FileInputStream(new File("C:\\Users\\admin\\Desktop\\secondProject\\src\\main\\webapp\\resources\\img\\noImg.png"));
 				student.setImage(IOUtils.toByteArray(is));		        	
 			}
@@ -95,6 +106,8 @@ public class HomeController {
 		service.saveStudent(student);
 		return "redirect:/";
 	}
+	
+	//if exists an abonament with such id, will be return existing abonament else returning new abonament
 	@RequestMapping(value = "/abonament", method = RequestMethod.GET)
 	public String abonamentGet(@RequestParam(value="abonamentId", required=false) int abonamentId, Model model) {
 		LibraryAbonament abonament = service.getAbonamentByStudentId(abonamentId);
@@ -107,6 +120,8 @@ public class HomeController {
 		}						
 		return "abonament";
 	}
+	
+	//save abonament and redirect to home page
 	@RequestMapping(value = "/abonament", method = RequestMethod.POST)
 	public String addUpdate(@Valid LibraryAbonament abonament, BindingResult bindingResult, Model model){
 		if(bindingResult.hasErrors()){
@@ -115,6 +130,8 @@ public class HomeController {
 		service.saveAbonament(abonament);
 		return "redirect:/";
 	}
+	
+	//get student with such id and forward to mark.jsp page 
 	@RequestMapping(value = "/mark", method = RequestMethod.GET)
 	public String markGet(@RequestParam(value="stId", required=false) int stId, Model model) {
 		Mark mark= new Mark();		
@@ -122,6 +139,8 @@ public class HomeController {
 		model.addAttribute("mark", mark);							
 		return "mark";
 	}
+	
+	//this method receives a request from ajax to obtain a list of professors by discipline id
 	@RequestMapping(value="/getProffessors", method=RequestMethod.GET)
 	@ResponseBody
 	public Discipline getProffesssors(@RequestParam("disciplineId") int id){
@@ -134,6 +153,8 @@ public class HomeController {
 		}
 		return discipline;		
 	}
+	
+	//save mark and redirect to home page
 	@RequestMapping(value = "/mark", method = RequestMethod.POST)
 	public String addMark(@Valid Mark mark, BindingResult bindingResult, Model model){
 		if(bindingResult.hasErrors()){
@@ -142,11 +163,15 @@ public class HomeController {
 		service.saveMark(mark);
 		return "redirect:/";
 	}
+	
+	//delete student by id
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public String delete(@RequestParam(value="id", required=false) int id, Model model) {
 		service.deleteStudent(id);		
 		return "redirect:/";
 	}	
+	
+	//this method receives an id get image from database with current id if no image set default image
 	@RequestMapping(method=RequestMethod.GET, value="image")
 	public void showImage(@RequestParam(value="id", required=false) int id, HttpServletResponse response,HttpServletRequest request){
 		response.setContentType("image/jpg");
@@ -163,10 +188,10 @@ public class HomeController {
 		}
 		
 	}
+	
+	//get all students from database and sent list to class where will create a pdf file with this list
 	@RequestMapping(method=RequestMethod.GET, value="downloadPdf")
 	public ModelAndView download(HttpServletRequest request, HttpServletResponse response){
-//		response.setContentType("application/pdf");
-//		response.setHeader("Content-Disposition", "attachment; filename=studentList.pdf");
 		return new ModelAndView("pdfView", "students", service.getAllStudents());
 	}
 	
