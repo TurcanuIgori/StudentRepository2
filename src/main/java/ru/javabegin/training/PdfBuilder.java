@@ -20,10 +20,10 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import md.spring.model.DisciplineAverage;
-import md.spring.model.Phone;
-import md.spring.model.STATUS;
-import md.spring.model.Student;
+import ru.javabegin.training.model.DisciplineAverage;
+import ru.javabegin.training.model.Phone;
+import ru.javabegin.training.model.STATUS;
+import ru.javabegin.training.model.Student;
 
 public class PdfBuilder extends AbstractTextPdfView {
 

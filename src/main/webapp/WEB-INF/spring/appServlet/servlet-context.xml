@@ -37,17 +37,17 @@
 	p:dataSource-ref="dataSource">
 	<property name="annotatedClasses">
 		<list>
-			<value>md.spring.model.Student</value>
-			<value>md.spring.model.Proffessor</value>
-			<value>md.spring.model.Person</value>
-			<value>md.spring.model.Address</value>
-			<value>md.spring.model.Phone</value>
-			<value>md.spring.model.PhoneType</value>
-			<value>md.spring.model.LibraryAbonament</value>
-			<value>md.spring.model.Group</value>
-			<value>md.spring.model.Mark</value>
-			<value>md.spring.model.DisciplineAverage</value>
-			<value>md.spring.model.Discipline</value>
+			<value>ru.javabegin.training.model.Student</value>
+			<value>ru.javabegin.training.model.Proffessor</value>
+			<value>ru.javabegin.training.model.Person</value>
+			<value>ru.javabegin.training.model.Address</value>
+			<value>ru.javabegin.training.model.Phone</value>
+			<value>ru.javabegin.training.model.PhoneType</value>
+			<value>ru.javabegin.training.model.LibraryAbonament</value>
+			<value>ru.javabegin.training.model.Group</value>
+			<value>ru.javabegin.training.model.Mark</value>
+			<value>ru.javabegin.training.model.DisciplineAverage</value>
+			<value>ru.javabegin.training.model.Discipline</value>
 		</list>
 	</property>			
 		<property name="hibernateProperties">
@@ -60,29 +60,21 @@
 	</bean>
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
-	<bean id="studentDaoImplements" class="md.spring.implement.StudentDaoImplements">
+	<bean id="studentDaoImplements" class="ru.javabegin.training.implement.StudentDaoImplements">
 		<property name="sessionFactory" ref="hibernate5SessionFactory"/>
 	</bean>
-	<bean id="phoneDao" class="md.spring.implement.PhoneDao">
-		<property name="sessionFactory" ref="hibernate5SessionFactory"/>
-	</bean>
-		<bean id="addressDao" class="md.spring.implement.AddressDao">
-		<property name="sessionFactory" ref="hibernate5SessionFactory"/>
-	</bean>	
-	<bean id="disciplineDao" class="md.spring.implement.DisciplineDao">
+	<bean id="disciplineDao" class="ru.javabegin.training.implement.DisciplineDao">
 		<property name="sessionFactory" ref="hibernate5SessionFactory"/>
 	</bean>
 	
-	<bean id="abonamentDao" class="md.spring.implement.LibraryAbonamentDao">
+	<bean id="abonamentDao" class="ru.javabegin.training.implement.LibraryAbonamentDao">
 		<property name="sessionFactory" ref="hibernate5SessionFactory"/>
 	</bean>	
-	<bean id="markDao" class="md.spring.implement.MarkDao">
+	<bean id="markDao" class="ru.javabegin.training.implement.MarkDao">
 		<property name="sessionFactory" ref="hibernate5SessionFactory"/>
 	</bean>
-	<bean id="service" class="md.spring.service.Service">
+	<bean id="service" class="ru.javabegin.training.service.Service">
 		<property name="studentDaoImplements" ref="studentDaoImplements"/>
-		<property name="phoneDao" ref="phoneDao"/>
-		<property name="addressDao" ref="addressDao"/>
 		<property name="abonamentDao" ref="abonamentDao"/>
 		<property name="disciplineDao" ref="disciplineDao"/>
 		<property name="markDao" ref="markDao"/>

@@ -25,13 +25,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import md.spring.model.Discipline;
-import md.spring.model.LibraryAbonament;
-import md.spring.model.Mark;
-import md.spring.model.Proffessor;
-import md.spring.model.SearchData;
-import md.spring.model.Student;
-import md.spring.service.Service;
+import ru.javabegin.training.model.Discipline;
+import ru.javabegin.training.model.LibraryAbonament;
+import ru.javabegin.training.model.Mark;
+import ru.javabegin.training.model.Proffessor;
+import ru.javabegin.training.model.SearchData;
+import ru.javabegin.training.model.Student;
+import ru.javabegin.training.service.Service;
 
 //primary controller
 @Controller
