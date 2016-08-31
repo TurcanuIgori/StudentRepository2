@@ -10,9 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 @Entity
 @Table
 public class Discipline {
@@ -28,7 +31,8 @@ public class Discipline {
 	@Column
 	private double scholarshipThreshold;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "professor_discipline", joinColumns = { @JoinColumn(name = "discipline_id") }, inverseJoinColumns = { @JoinColumn(name = "profesor_id") })
 	private List<Proffessor> proffessorList;
 	

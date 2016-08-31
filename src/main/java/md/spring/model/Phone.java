@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 @Entity
@@ -30,6 +31,7 @@ public class Phone implements Serializable{
 	@Column
 	private String phone;
 	
+	@Valid
 	@ManyToOne
 	@JoinColumn(name="type_id", referencedColumnName="id")
 	private PhoneType phoneType;

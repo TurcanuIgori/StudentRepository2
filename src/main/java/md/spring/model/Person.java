@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -48,10 +49,12 @@ public class Person implements Serializable{
 	@Column(name="lastname")
 	private String lastName;
 	
+	@Valid
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)	
 	@JoinColumn(name="address_id")	
 	private Address address;
 	
+	@Valid
 	@OneToMany(fetch=FetchType.EAGER, orphanRemoval = true, cascade=CascadeType.ALL)
 	@JoinTable(name="person_phone", joinColumns={@JoinColumn(name="person_id")}, inverseJoinColumns={@JoinColumn(name="phone_id")})	
 	private List<Phone> listPhones;

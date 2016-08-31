@@ -14,8 +14,8 @@ public class SearchData {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date endDob;
 	private int discipline;
-	private float disciplineAvg;
-	private float totalAvg;
+	private double disciplineAvg;
+	private double totalAvg;
 	
 	public String getName() {
 		return name;
@@ -59,18 +59,16 @@ public class SearchData {
 	public void setDiscipline(int discipline) {
 		this.discipline = discipline;
 	}
-	public float getDisciplineAvg() {
+	public double getDisciplineAvg() {
 		return disciplineAvg;
 	}
-	public void setDisciplineAvg(float disciplineAvg) {
+	public void setDisciplineAvg(double disciplineAvg) {
 		this.disciplineAvg = disciplineAvg;
 	}
-	public float getTotalAvg() {
+	public double getTotalAvg() {
 		return totalAvg;
 	}
-	public void setTotalAvg(float totalAvg) {
+	public void setTotalAvg(double totalAvg) {
 		this.totalAvg = totalAvg;
-	}
-		
-	
+	}	
 }

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +37,7 @@ import md.spring.service.Service;
 @Controller
 public class HomeController {
 	
-//	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	private Service service;	
 	@Autowired
 	public void setService(Service service) {		
@@ -46,13 +48,16 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		model.addAttribute("searchData", new SearchData());
+		logger.info("from get to groups");
 		model.addAttribute("groups", service.getAllGroups());
+		logger.info("from groups to disciplines");
 		model.addAttribute("disciplineList", service.getAllDiscipline());
+		logger.info("from disciplines to students");
 		model.addAttribute("students", service.getAllStudents());		
 		return "home";
 	}
 	
-	//get students by criterias and return to home.jsp page
+	//get students by criteria and return to home.jsp page
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public String search(@ModelAttribute("searchData")SearchData searchData, Locale locale, Model model) {
 		System.out.println(searchData.getName() + searchData.getDiscipline() + searchData.getGender());
@@ -157,7 +162,8 @@ public class HomeController {
 	//save mark and redirect to home page
 	@RequestMapping(value = "/mark", method = RequestMethod.POST)
 	public String addMark(@Valid Mark mark, BindingResult bindingResult, Model model){
-		if(bindingResult.hasErrors()){
+		if(bindingResult.hasErrors() || mark.getProffessor().getId() == 0){
+			mark.setStudent(service.getStudentById(mark.getStudent().getId()));
 			return "mark";
 		}
 		service.saveMark(mark);

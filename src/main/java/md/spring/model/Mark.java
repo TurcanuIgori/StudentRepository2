@@ -1,10 +1,10 @@
 package md.spring.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -28,16 +31,20 @@ public class Mark {
 	@JoinColumn(name = "student_id", referencedColumnName = "id")
 	private Student student;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@Valid
+	@ManyToOne()
 	@JoinColumn(name = "discipline_id", referencedColumnName = "id")
 	private Discipline discipline;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	
+	@ManyToOne()
 	@JoinColumn(name = "proffessor_id", referencedColumnName = "id")
 	private Proffessor proffessor;
 	
+	@DecimalMax(value="10.00", message="Mark is greater than 10")
+	@DecimalMin(value = "1.00", message = "Mark is less than 1")
 	@Column
-	private float mark;
+	private BigDecimal mark;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
@@ -66,11 +73,11 @@ public class Mark {
 	}
 	public void setProffessor(Proffessor proffessor) {
 		this.proffessor = proffessor;
-	}
-	public float getMark() {
+	}	
+	public BigDecimal getMark() {
 		return mark;
 	}
-	public void setMark(float mark) {
+	public void setMark(BigDecimal mark) {
 		this.mark = mark;
 	}
 	public Date getCreatedDate() {

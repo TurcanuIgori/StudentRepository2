@@ -11,9 +11,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.validation.Valid;
 
+import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 @Entity
@@ -22,17 +25,18 @@ public class Student extends Person{
 
 	private static final long serialVersionUID = 1L;
 		
-	@ManyToOne(fetch=FetchType.EAGER)
+	@Valid
+	@ManyToOne(fetch=FetchType.EAGER)	
 	@JoinTable(name="student_grup", joinColumns={@JoinColumn(name="student_id")}, inverseJoinColumns={@JoinColumn(name="group_id")})
 	@PrimaryKeyJoinColumn
 	private Group grup;
 
-	@ManyToMany(cascade=CascadeType.REMOVE)
+	@ManyToMany()
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name="student_discipline", joinColumns={@JoinColumn(name="student_id")}, inverseJoinColumns={@JoinColumn(name="discipline_id")})
 	private List<Discipline> disciplineList;
 	
-	@OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
 	private Set<Mark> markList;
 	
 	@OneToMany(targetEntity=DisciplineAverage.class, mappedBy = "student", cascade = CascadeType.REMOVE)

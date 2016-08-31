@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 @Entity
@@ -18,10 +19,12 @@ public class DisciplineAverage {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "student_id", referencedColumnName = "id", nullable = true)
+	@OrderColumn(name="id")
 	private Student student;
-
+	
+	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "discipline_id", referencedColumnName = "id", nullable = false)
 	private Discipline discipline;

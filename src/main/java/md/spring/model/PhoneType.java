@@ -7,11 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
 @Entity
 public class PhoneType implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	@Min(value = 1, message = "Select Phone type.")	
 	@Id  
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
