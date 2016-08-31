@@ -1,4 +1,4 @@
-package ru.javabegin.training;
+package ru.javabegin.training.controller;
 
 import java.io.File;
 import java.io.FileInputStream;

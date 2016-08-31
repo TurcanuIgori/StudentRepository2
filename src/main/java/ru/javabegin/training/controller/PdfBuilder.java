@@ -1,4 +1,4 @@
-package ru.javabegin.training;
+package ru.javabegin.training.controller;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
