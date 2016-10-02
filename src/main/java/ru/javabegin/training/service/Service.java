@@ -5,10 +5,14 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.javabegin.training.controller.NotFoundDataException;
+import ru.javabegin.training.controller.NullDataException;
 import ru.javabegin.training.implement.DisciplineDao;
 import ru.javabegin.training.implement.LibraryAbonamentDao;
 import ru.javabegin.training.implement.MarkDao;
@@ -43,8 +47,8 @@ public class Service {
 		this.studentDaoImplements = studentDaoImplements;
 	}	
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void saveStudent(Student student){
-		studentDaoImplements.saveStudent(student);
+	public Student saveStudent(Student student) throws NullDataException{
+		return studentDaoImplements.saveStudent(student);
 	}
 	@Transactional(propagation=Propagation.SUPPORTS)
 	public Student getStudentById(int id){
@@ -67,16 +71,15 @@ public class Service {
 		return studentDaoImplements.getAllGroups();
 	}
 	@Transactional(propagation=Propagation.SUPPORTS)
-	public LibraryAbonament getAbonamentByStudentId(int id) {		 
+	public LibraryAbonament getAbonamentByStudentId(int id) throws NotFoundDataException {		 
 		return abonamentDao.getAbonamentByStudentId(id);
 	}
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void saveAbonament(LibraryAbonament abonament) {
+	public void saveAbonament(LibraryAbonament abonament) throws NullDataException{
 		abonamentDao.saveAbonament(abonament);
-				
 	}
 	@Transactional(propagation=Propagation.SUPPORTS)
-	public Student getStudentDetailsById(int id) {
+	public Student getStudentDetailsById(int id) throws DataAccessException, NotFoundDataException{
 		return studentDaoImplements.getStudentDetailsById(id);
 	}	
 	@Transactional(propagation=Propagation.SUPPORTS)
@@ -86,9 +89,8 @@ public class Service {
 	
 	//add mark
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void saveMark(Mark mark) {
+	public void saveMark(Mark mark) throws NullDataException{
 		 markDao.saveMark(mark);
-		
 	}
 	
 	//get all discipline from database

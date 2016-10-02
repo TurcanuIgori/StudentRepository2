@@ -14,6 +14,8 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -54,6 +56,7 @@ public class HomeController {
 		model.addAttribute("disciplineList", service.getAllDiscipline());
 		logger.info("from disciplines to students");
 		model.addAttribute("students", service.getAllStudents());		
+//		throw new NotFoundData("Student with this data not Found!");
 		return "home";
 	}
 	
@@ -71,21 +74,26 @@ public class HomeController {
 	//request to student and go to edit page
 	//if id equals with 0 return new student else return student by id
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public String homePost(@RequestParam(value="id", required=false) int id, Model model) {
+	public String homeGet(@RequestParam(value="id", required=false) int id, Model model) {
 		if(id != 0){			
-			model.addAttribute("student", service.getStudentDetailsById(id));
+				try{
+					model.addAttribute("student", service.getStudentDetailsById(id));
+				}catch(NotFoundDataException e){
+					throw new NotFoundDataException("Student with this data not found!");
+				}		
 		}else{			
 			model.addAttribute("student", new Student());
 		}
 		model.addAttribute("grups", service.getAllGroups());
 		model.addAttribute("phonetype", service.getAllPhoneTypes());		
 		return "edit";
+		
 	}
 	
 	//request to save or update student and redirect to home page
 	//check student if it has errors
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
-	public String addUpdate(@Valid Student student, BindingResult bindingResult, Model model, @RequestParam(value="img", required=true) MultipartFile file) throws IOException{
+	public String addUpdate(@Valid Student student, BindingResult bindingResult, Model model, @RequestParam(value="img", required=true) MultipartFile file) throws IOException, DataAccessException, NotFoundDataException{
 		if(bindingResult.hasErrors()){
 			model.addAttribute("grups", service.getAllGroups());
 			model.addAttribute("phonetype", service.getAllPhoneTypes());
@@ -107,14 +115,18 @@ public class HomeController {
 				InputStream is = new FileInputStream(new File("C:\\Users\\admin\\Desktop\\secondProject\\src\\main\\webapp\\resources\\img\\noImg.png"));
 				student.setImage(IOUtils.toByteArray(is));		        	
 			}
-		}			
-		service.saveStudent(student);
+		}	
+		try{
+			service.saveStudent(student);
+		}catch(NullDataException e){
+			throw new NullDataException("For add or update student need to complete all cells!");
+		}
 		return "redirect:/";
 	}
 	
 	//if exists an abonament with such id, will be return existing abonament else returning new abonament
 	@RequestMapping(value = "/abonament", method = RequestMethod.GET)
-	public String abonamentGet(@RequestParam(value="abonamentId", required=false) int abonamentId, Model model) {
+	public String abonamentGet(@RequestParam(value="abonamentId", required=false) int abonamentId, Model model) throws DataAccessException, NotFoundDataException {
 		LibraryAbonament abonament = service.getAbonamentByStudentId(abonamentId);
 		if(abonament != null){
 			model.addAttribute("abonament", abonament);
@@ -132,7 +144,11 @@ public class HomeController {
 		if(bindingResult.hasErrors()){
 			return "abonament";
 		}
+		try{
 		service.saveAbonament(abonament);
+		}catch(NullDataException e){
+			throw new NullDataException("For add or update abonament need to complete all cells!");
+		}
 		return "redirect:/";
 	}
 	
@@ -166,7 +182,11 @@ public class HomeController {
 			mark.setStudent(service.getStudentById(mark.getStudent().getId()));
 			return "mark";
 		}
-		service.saveMark(mark);
+		try{
+			service.saveMark(mark);
+		}catch(NullDataException e){
+			throw new NullDataException("For add new mark need to complete all cells!");
+		}
 		return "redirect:/";
 	}
 	
@@ -190,6 +210,12 @@ public class HomeController {
 			}			
 			response.getOutputStream().close();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotFoundDataException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

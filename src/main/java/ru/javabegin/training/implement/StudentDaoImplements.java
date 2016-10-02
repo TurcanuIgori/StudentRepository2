@@ -9,8 +9,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
+import ru.javabegin.training.controller.NotFoundDataException;
+import ru.javabegin.training.controller.NullDataException;
 import ru.javabegin.training.model.Group;
 import ru.javabegin.training.model.PhoneType;
 import ru.javabegin.training.model.SearchData;
@@ -32,7 +35,7 @@ public class StudentDaoImplements{
 	}
 	
 	// delete student by id
-	public void deleteStudent(int id) {		
+	public void deleteStudent(int id) throws IllegalStateException{		
 		currentSession().delete(getStudentById(id));
 		logger.info("Person had been removed.");
 		
@@ -46,20 +49,28 @@ public class StudentDaoImplements{
 	}
 	
 	// get student by id
-	public Student getStudentDetailsById(int id) {
+	public Student getStudentDetailsById(int id) throws DataAccessException, NotFoundDataException{
 		Query query = currentSession().createQuery("Select distinct p From Student as p where p.id = :id");
 		query.setParameter("id", id);
-		return (Student) query.uniqueResult();
+		Student student = (Student) query.uniqueResult();
+		if(student != null){
+			return student;
+		}else{
+			throw new NotFoundDataException();
+		}
 	}
 
 	//	if student.id > 0 will execute update student else save student
-	public void saveStudent(Student student) {
+	public Student saveStudent(Student student) throws NullDataException{
+		if(student == null){
+			throw new NullDataException();
+		}
 		if(student.getId() != 0){
 			currentSession().update(student);
 		}else{
 			currentSession().save(student);
 		}
-		
+		return student;
 	}
 	
 	// get a list with all students from database

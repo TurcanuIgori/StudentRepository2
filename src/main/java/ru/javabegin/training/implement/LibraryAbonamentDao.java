@@ -5,6 +5,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import ru.javabegin.training.controller.NotFoundDataException;
+import ru.javabegin.training.controller.NullDataException;
 import ru.javabegin.training.model.LibraryAbonament;
 import ru.javabegin.training.model.STATUS;
 import ru.javabegin.training.model.Student;
@@ -26,13 +28,16 @@ public class LibraryAbonamentDao {
 		return sessionFactory.getCurrentSession();
 	}
 	
-	public LibraryAbonament getAbonamentByStudentId(int id){
+	public LibraryAbonament getAbonamentByStudentId(int id) throws NotFoundDataException{
 		Query query = currentSession().createQuery("Select distinct a From LibraryAbonament as a Inner Join Fetch a.person where a.person.id = :id");
 		query.setParameter("id", id);
 		return (LibraryAbonament) query.uniqueResult();
 	}
 	
-	public void saveAbonament(LibraryAbonament abonament){		
+	public void saveAbonament(LibraryAbonament abonament) throws NullDataException{		
+		if(abonament == null){
+			throw new NullDataException();
+		}
 		if(abonament.getStatus()==STATUS.SUSPENDED || abonament.getStatus()==STATUS.NONE){
             abonament.setStartDate(null);
             abonament.setEndDate(null);
