@@ -38,8 +38,9 @@ public class StudentDaoImplementsTest {
 	}
 	public void setService(Service service) {
 		this.service = service;
-	}
-
+	}	
+	
+	//check if method service.save(Student student) will return student with auto-generate id
 	@Test
 	@Rollback(true)
 	public void saveStudentTest(){
@@ -68,19 +69,21 @@ public class StudentDaoImplementsTest {
 		assertNotNull(student.getId());
 	}
 	
+	//if we send null object method must return exception
 	@Test(expected=NullDataException.class)
 	public void saveStudentTest1(){
 		Student student = null;
 		service.saveStudent(student);
 	}
 	
-
+	//if not registration with this id in database method must return NotFoundDataException exception
 	@Test(expected=NotFoundDataException.class)
 	@Rollback(true)
 	public void getStudentDetailsByIdTest(){
 		assertEquals(1, service.getStudentDetailsById(1).getId());
 	}
 	
+	//if not student with current id in database method must return Not FoundData Exception exception 
 	@Test(expected=NotFoundDataException.class)
 	@Rollback(true)
 	public void deleteStudentTest(){

@@ -26,6 +26,7 @@ public class LibraryAbonamentDaoTest {
 		this.service = service;
 	}
 
+	//if we send null object to service.save(Abonament abonament) method must return NullDataException exception
 	@Test(expected=NullDataException.class)
 	@Rollback(true)
 	public void saveAbonamentTest(){
